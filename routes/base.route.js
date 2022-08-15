@@ -4,6 +4,14 @@ const router = express.Router();
 
 router.get("/", function(req, res){
     res.redirect("/products")
-})
+});
+
+router.get('/401', function(req, res) {
+    res.status(401).render('shared-base/401');
+});
+
+router.get('/403', function(req, res) {
+    res.status(403).render('shared-base/403');
+});
 
 module.exports = router;

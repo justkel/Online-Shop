@@ -12,11 +12,13 @@ const addCsrfTokenMiddleware = require("./middlewares/csrf-token")
 const errorHandlingMiddleware = require("./middlewares/error-handler")
 const checkAuthStatusMiddleware = require("./middlewares/check-auth");
 const protectRoutesMiddleware = require('./middlewares/protect-routes');
+const cartMiddleware = require("./middlewares/cart");
 
 const authRoutes = require("./routes/auth.routes")
 const productsRoutes = require("./routes/products.route");
 const baseRoutes = require("./routes/base.route");
 const adminRoutes = require("./routes/admin.routes");
+const cartRoutes = require("./routes/cart.routes");
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.use(express.static("public"));
 app.use( '/products/assets', express.static("product-data"));
 
 app.use(express.urlencoded({ extended: false}));
+app.use(express.json());
 
 const sessionConfig = createSessionConfig();
 
@@ -34,12 +37,15 @@ app.use(expressSession(sessionConfig));
 
 app.use(csrf());
 
+app.use(cartMiddleware);
+
 app.use(addCsrfTokenMiddleware);
 app.use(checkAuthStatusMiddleware);
 
 app.use(baseRoutes);
 app.use(authRoutes);
 app.use(productsRoutes);
+app.use("/cart", cartRoutes);  // added here because it should also be viewed by unauth people
 app.use(protectRoutesMiddleware); 
 app.use("/admin", adminRoutes);
 

@@ -1,22 +1,32 @@
 const mongodb = require("mongodb");
 
-const MongoClient = mongodb.MongoClient;
-
+// Initialize a variable to store the database connection
 let database;
 
-async function connectToDatabase () {
-    const client = await MongoClient.connect("mongodb://localhost:27017");
-    database = client.db("online-shop");
+// Function to connect to the database
+async function connectToDatabase() {
+  const url = 'mongodb://0.0.0.0:27017/copysar'; // Update with your MongoDB connection URL
+  const dbName = 'copysar';
+
+  try {
+    const client = await mongodb.MongoClient.connect(url);
+    database = client.db(dbName);
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+    throw err;
+  }
 }
 
-function getDb () {
-    if (!database) {
-        throw new Error ("You must connect first");
-    }
-    return database;
+// Function to get the connected database instance
+function getDb() {
+  if (!database) {
+    throw new Error("You must connect first");
+  }
+  return database;
 }
 
 module.exports = {
-    connectToDatabase: connectToDatabase,
-    getDb: getDb,
+  connectToDatabase,
+  getDb
 };

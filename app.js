@@ -58,11 +58,17 @@ app.use(notFoundMiddleware);
 
 app.use(errorHandlingMiddleware);
 
-db.connectToDatabase().then(function() {
-    app.listen(3000);
-})
-.catch(function(error) {
-    console.log("Failed to connect to the Database");
-    console.log(error);
-});
+db.connectToDatabase()
+  .then(() => {
+    // The database connection is established
+    console.log('Connected to MongoDB');
+    
+    // Start your Express app
+    app.listen(5000, () => {
+      console.log('Server is running on port 5000');
+    });
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
 
